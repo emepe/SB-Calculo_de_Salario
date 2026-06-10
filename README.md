@@ -47,7 +47,7 @@ O sistema desenvolvido neste trabalho irá:
 
 - Cadastrar funcionários com seus dados básicos (ex.: nome, salário base).
 - Registrar adiantamentos de salário para cada funcionário, informando data e valor.
-- Registrar consumação interna de cada funcionário no mês (valor total ou por produto e quantidade, conforme modelagem escolhida).
+- Registrar consumação interna de cada funcionário no mês (por produto e quantidade total).
 - Calcular o total de adiantamentos de um funcionário em um determinado mês.
 - Calcular o total de consumação interna de um funcionário em um determinado mês, aplicando acréscimo de 3% sobre o valor de custo.
 - Calcular o salário final do funcionário no mês, considerando:
