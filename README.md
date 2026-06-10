@@ -84,7 +84,6 @@ Não serão implementados nesta versão:
 - **US04** – Como gestora, quero solicitar o cálculo do salário final de um funcionário em um determinado mês para saber quanto devo pagar via Pix.
 - **US05** – Como gestora, quero visualizar um resumo dos valores considerados no cálculo (salário base, total de adiantamentos, total de consumação) para conferir antes de realizar o pagamento.
 
-(Caso queira, você pode adicionar critérios de aceitação embaixo de cada US.)
 
 ### 4.3 Requisitos funcionais (RF)
 
@@ -98,11 +97,10 @@ Não serão implementados nesta versão:
 
 ### 4.4 Requisitos não funcionais (RNF)
 
-- **RNF01**: O sistema deve ser implementado utilizando a linguagem Java.
-- **RNF02**: O sistema deve possuir testes unitários para as principais regras de cálculo de salário.
-- **RNF03**: O sistema deve seguir princípios de orientação a objetos e SOLID.
-- **RNF04**: O código-fonte deve ser versionado em um repositório Git hospedado no GitHub.
-- **RNF05**: O projeto deve estar organizado de forma clara, com separação entre código de domínio, serviços e testes.
-
+- **RNF01**: O sistema deve realizar o cálculo do salário de um funcionário de forma praticamente instantânea, não ultrapassando alguns milissegundos para um mês de dados em memória.
+- **RNF02**: O sistema deve garantir consistência dos cálculos, aplicando as mesmas regras de negócio de forma uniforme para todos os funcionários e meses.
+- **RNF03**: O sistema deve ser de fácil manutenção, com código organizado em camadas (domínio e serviços) e classes com responsabilidades bem definidas.
+- **RNF04**: O sistema deve permitir a inclusão de novas regras de cálculo (por exemplo, controle de faltas) com impacto mínimo nas classes já existentes.
+- **RNF05**: O sistema deve armazenar e processar valores monetários com precisão adequada para evitar erros de arredondamento relevantes nos salários.
 
 (...)
