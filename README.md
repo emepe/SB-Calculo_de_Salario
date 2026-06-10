@@ -64,9 +64,6 @@ Não serão implementados nesta versão:
 - Interface gráfica (web, desktop ou mobile).
 - Controle de estoque completo de produtos do bar.
 
-
-(FALTA REVISAR ↓)
-
 ## 4. Levantamento e Análise de Requisitos
 
 ### 4.1 Atores
@@ -76,7 +73,7 @@ Não serão implementados nesta versão:
 
 ### 4.2 User Stories (abordagem ágil)
 
-(Exemplos para adaptar)
+--------------> (Preencher/adaptar/revisar)
 
 - **US01** – Como gestora, quero cadastrar os funcionários com seus salários base para que o sistema consiga calcular seus salários mensais.
 - **US02** – Como gestora, quero registrar adiantamentos de salário por funcionário para que esses valores sejam descontados no cálculo do mês.
@@ -103,4 +100,112 @@ Não serão implementados nesta versão:
 - **RNF04**: O sistema deve permitir a inclusão de novas regras de cálculo (por exemplo, controle de faltas) com impacto mínimo nas classes já existentes.
 - **RNF05**: O sistema deve armazenar e processar valores monetários com precisão adequada para evitar erros de arredondamento relevantes nos salários.
 
-(...)
+## 5. Modelagem da Solução
+
+### 5.1 Classes previstas
+
+--------------> (Preencher/adaptar)
+
+- **Funcionario**
+  - atributos sugeridos: id, nome, salarioBase
+- **Adiantamento**
+  - atributos sugeridos: id, funcionario, data, valor
+- **Produto** (opcional, se usar consumação por produto)
+  - atributos sugeridos: id, nome, precoCusto
+- **ConsumoProduto** ou **ConsumoInterno**
+  - atributos sugeridos: id, funcionario, produto (ou descrição), quantidade, valorCustoTotal
+- **CalculadoraSalarioService**
+  - métodos sugeridos: 
+    - calcularTotalAdiantamentos(funcionario, mes)
+    - calcularTotalConsumo(funcionario, mes)
+    - calcularSalarioFinal(funcionario, mes)
+
+(Depois, desenhar o diagrama de classes em uma ferramenta como draw.io e salvar a imagem.)
+
+### 5.2 Outros diagramas (opcional)
+
+--------------> (Preencher/adaptar/revisar)
+
+- Diagrama de casos de uso com:
+  - Atores: Gestora, Funcionário.
+  - Casos de uso principais: Cadastrar Funcionário, Registrar Adiantamento, Registrar Consumo, Calcular Salário.
+
+## 6. Desenvolvimento da Solução
+
+### 6.1 Tecnologias utilizadas
+
+--------------> (Preencher/adaptar)
+
+(Preencher)
+- Linguagem: Java (versão X).
+- Frameworks/bibliotecas: JUnit 5 (e outras, se usadas).
+- Ferramentas: IDE (VS Code / IntelliJ / Eclipse), Git, GitHub.
+
+### 6.2 Organização do código
+
+(Exemplo de estrutura)
+
+```text
+src/
+  main/
+    java/
+      dominio/
+        Funcionario.java
+        Adiantamento.java
+        Produto.java
+        ConsumoInterno.java
+      servico/
+        CalculadoraSalarioService.java
+  test/
+    java/
+      servico/
+        CalculadoraSalarioServiceTest.java
+```
+
+(NADA A PARTIR DAQUI PRA BAIXO FOI REVISADO)
+ 
+### 6.3 Princípios SOLID e padrões de projeto
+
+(Preencher conforme sua implementação)
+
+- SRP (Single Responsibility): cada classe de domínio representa um conceito específico (Funcionario, Adiantamento, etc.), e a lógica de cálculo fica concentrada em uma classe de serviço.
+- (Opcional) Padrões de projeto utilizados (ex.: Strategy para diferentes formas de cálculo, Factory para criar serviços, etc.) e breve justificativa.
+
+
+## 7. Testes
+
+(Preencher depois de implementar)
+
+- Descrição das classes testadas (ex.: CalculadoraSalarioService).
+- Cenários contemplados:
+  - cálculo sem adiantamentos nem consumação;
+  - cálculo com adiantamentos;
+  - cálculo com consumação;
+  - cálculo com adiantamentos e consumação ao mesmo tempo.
+- Como executar os testes (comando ou procedimento na IDE).
+
+
+## 8. Instruções de Execução
+
+(Adaptar conforme seu projeto)
+
+1. Clonar o repositório:
+   ```bash
+   git clone https://github.com/SEU_USUARIO/beach-tennis-salary-backend.git
+   ```
+2. Abrir o projeto na IDE de preferência.
+3. Compilar o projeto.
+4. Executar:
+   - a classe `Main` (se existir uma interface simples em console), ou
+   - os testes unitários da classe `CalculadoraSalarioServiceTest`.
+
+(Adicionar detalhes se usar Maven/Gradle, por exemplo `mvn test`.)
+
+## 9. Trabalhos futuros
+
+(Preencher com ideias de evolução)
+
+- Incluir controle de faltas e diárias por dia, com valores diferentes para dias de semana e fim de semana.
+- Registrar ponto diário (entrada/saída) para cada funcionário.
+- Adicionar uma interface web ou mobile para uso direto pelas gestoras.
+- Gerar relatórios mais detalhados para os funcionários (histórico de meses, gráficos, etc.).
