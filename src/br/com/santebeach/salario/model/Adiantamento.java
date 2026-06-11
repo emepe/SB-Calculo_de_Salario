@@ -1,4 +1,4 @@
-package br.com.santebeach.salario;
+package br.com.santebeach.salario.model;
 
 import java.time.LocalDate;
 

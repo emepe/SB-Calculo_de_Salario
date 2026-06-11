@@ -9,11 +9,11 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import br.com.santebeach.salario.Adiantamento;
-import br.com.santebeach.salario.CalculadoraSalarioService;
-import br.com.santebeach.salario.ConsumoInterno;
-import br.com.santebeach.salario.Funcionario;
-import br.com.santebeach.salario.Produto;
+import br.com.santebeach.salario.model.Adiantamento;
+import br.com.santebeach.salario.model.ConsumoInterno;
+import br.com.santebeach.salario.model.Funcionario;
+import br.com.santebeach.salario.model.Produto;
+import br.com.santebeach.salario.service.CalculadoraSalarioService;
 
 public class CalculadoraSalarioServiceTest {
 

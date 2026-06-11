@@ -1,9 +1,15 @@
-package br.com.santebeach.salario;
+package br.com.santebeach.salario.app;
 
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
+
+import br.com.santebeach.salario.model.Adiantamento;
+import br.com.santebeach.salario.model.ConsumoInterno;
+import br.com.santebeach.salario.model.Funcionario;
+import br.com.santebeach.salario.model.Produto;
+import br.com.santebeach.salario.service.CalculadoraSalarioService;
 
 
 

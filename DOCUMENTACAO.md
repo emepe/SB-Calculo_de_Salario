@@ -102,27 +102,27 @@ Não serão implementados nesta versão:
 
 ## 5. Modelagem da Solução
 
-### 5.1 Classes previstas
+### 5.1 Classes no Diagrama de Classes
 
---------------> (Preencher/adaptar)
+![alt text](<Diagrama de Classes.drawio.png>)
 
-- **Funcionario**
-  - atributos sugeridos: id, nome, salarioBase
-- **Adiantamento**
-  - atributos sugeridos: id, funcionario, data, valor
-- **Produto** (opcional, se usar consumação por produto)
-  - atributos sugeridos: id, nome, precoCusto
-- **ConsumoProduto** ou **ConsumoInterno**
-  - atributos sugeridos: id, funcionario, produto (ou descrição), quantidade, valorCustoTotal
-- **CalculadoraSalarioService**
-  - métodos sugeridos: 
-    - calcularTotalAdiantamentos(funcionario, mes)
-    - calcularTotalConsumo(funcionario, mes)
-    - calcularSalarioFinal(funcionario, mes)
+O sistema de cálculo de salários é composto por cinco classes principais: ``Funcionario``, ``Produto``, ``Adiantamento``, ``ConsumoInterno`` e ``CalculadoraSalarioService``.
 
-(Depois, desenhar o diagrama de classes em uma ferramenta como draw.io e salvar a imagem.)
+A classe ``Funcionario`` representa o colaborador da empresa, armazenando seu nome e o salário base. Ela oferece métodos de acesso para ler e alterar o salário base, sendo a entidade central sobre a qual são calculados adiantamentos, consumos e o salário final.
 
-### 5.2 Outros diagramas (opcional)
+A classe ``Produto`` modela os itens disponíveis para consumo interno, contendo o nome do produto e seu preço de custo, além de métodos para acessar essas informações.
+
+A classe ``Adiantamento`` registra valores adiantados ao funcionário em uma determinada data. Cada objeto dessa classe mantém uma associação a um único ``Funcionario``, a data do adiantamento e o valor correspondente, além de métodos para consulta desses dados.
+
+A classe ``ConsumoInterno`` registra o consumo de produtos realizado por um funcionário em uma data específica. Ela mantém referências a um ``Funcionario`` e a um ``Produto``, bem como a quantidade consumida e a data. A partir dessas informações, disponibiliza operações para calcular o valor total de custo do consumo (``getValorCustoTotal``) e o valor que será descontado do salário, aplicando um acréscimo de 3% sobre o custo (``getValorParaDesconto``).
+
+A classe ``CalculadoraSalarioService`` concentra a lógica de negócio relacionada ao cálculo de valores. Ela oferece operações para calcular o total de adiantamentos de um funcionário em um determinado mês e ano, o total de consumo interno no mesmo período e, por fim, o salário final, subtraindo do salário base o total de adiantamentos e o total de consumo para desconto.
+
+Do ponto de vista de relacionamentos, um ``Funcionario`` pode estar associado a vários ``Adiantamento`` e a vários ``ConsumoInterno`` (multiplicidade 1 para o funcionário e 0..* para os registros). Cada ``ConsumoInterno`` está associado a exatamente um ``Produto``, enquanto um ``Produto`` pode aparecer em muitos registros de consumo (1 para o produto e 0..* para ``ConsumoInterno``). A classe ``CalculadoraSalarioService`` depende de ``Funcionario``, ``Adiantamento`` e ``ConsumoInterno``, utilizando essas classes como parâmetros em seus métodos para realizar os cálculos, mas sem mantê-las como atributos internos.
+
+
+
+### 5.2 **Outros** diagramas (opcional)
 
 --------------> (Preencher/adaptar/revisar)
 
@@ -134,78 +134,172 @@ Não serão implementados nesta versão:
 
 ### 6.1 Tecnologias utilizadas
 
---------------> (Preencher/adaptar)
+O projeto foi desenvolvido em Java, com foco na implementação back-end da regra de cálculo salarial dos funcionários. Para validação do comportamento da aplicação, foram criados testes unitários utilizando JUnit. O desenvolvimento e a organização do repositório foram realizados com apoio de ferramentas de versionamento e ambiente de desenvolvimento.
 
-(Preencher)
-- Linguagem: Java (versão X).
-- Frameworks/bibliotecas: JUnit 5 (e outras, se usadas).
-- Ferramentas: IDE (VS Code / IntelliJ / Eclipse), Git, GitHub.
+- Linguagem: Java (versão 17.0.19).
+- Frameworks/bibliotecas: JUnit 5 para testes unitários.
+- Ferramentas: IDE VS Code, Git, GitHub.
 
 ### 6.2 Organização do código
 
-(Exemplo de estrutura)
+O projeto foi organizado em diretórios separados para arquivos compilados, bibliotecas externas, código-fonte, testes e documentação. Dentro da pasta `src`, as classes foram distribuídas em pacotes Java de acordo com sua responsabilidade, separando a aplicação principal, as entidades de domínio e a camada de serviço. Os testes unitários foram mantidos em uma estrutura paralela na pasta `test`, enquanto a pasta `bin` armazena os arquivos compilados e a pasta `lib` reúne as bibliotecas utilizadas no projeto.
 
 ```text
-src/
-  main/
-    java/
-      dominio/
-        Funcionario.java
-        Adiantamento.java
-        Produto.java
-        ConsumoInterno.java
-      servico/
-        CalculadoraSalarioService.java
-  test/
-    java/
-      servico/
-        CalculadoraSalarioServiceTest.java
+SB-CALCULO_DE_SALARIO/
+├── bin/
+│   └── br/
+│       └── com/
+│           └── santebeach/
+│               └── salario/
+│                   ├── Adiantamento.class
+│                   ├── CalculadoraSalarioService.class
+│                   ├── CalculadoraSalarioServiceTest.class
+│                   ├── ConsumoInterno.class
+│                   ├── Funcionario.class
+│                   ├── Main.class
+│                   └── Produto.class
+├── diagrams/
+│   ├── Diagrama de Classes.drawio
+│   └── Diagrama de Classes.png
+├── lib/
+│   ├── byte-buddy-1.14.0.jar
+│   ├── byte-buddy-agent-1.14.0.jar
+│   ├── junit-jupiter-api-5.10.2.jar
+│   ├── junit-jupiter-engine-5.10.2.jar
+│   ├── junit-platform-console-standalone-1.10.2.jar
+│   └── mockito-core-5.8.0.jar
+├── src/
+│   └── br/
+│       └── com/
+│           └── santebeach/
+│               └── salario/
+│                   ├── app/
+│                   │   └── Main.java
+│                   ├── model/
+│                   │   ├── Adiantamento.java
+│                   │   ├── ConsumoInterno.java
+│                   │   ├── Funcionario.java
+│                   │   └── Produto.java
+│                   └── service/
+│                       └── CalculadoraSalarioService.java
+├── test/
+│   └── br/
+│       └── com/
+│           └── santebeach/
+│               └── salario/
+│                   └── service/
+│                       └── CalculadoraSalarioServiceTest.java
+└── DOCUMENTACAO.md
 ```
 
 (NADA A PARTIR DAQUI PRA BAIXO FOI REVISADO)
  
 ### 6.3 Princípios SOLID e padrões de projeto
 
-(Preencher conforme sua implementação)
+**SRP (Single Responsibility Principle)**  
+No projeto atual, cada classe tem uma responsabilidade bem definida:
 
-- SRP (Single Responsibility): cada classe de domínio representa um conceito específico (Funcionario, Adiantamento, etc.), e a lógica de cálculo fica concentrada em uma classe de serviço.
-- (Opcional) Padrões de projeto utilizados (ex.: Strategy para diferentes formas de cálculo, Factory para criar serviços, etc.) e breve justificativa.
+- `Funcionario`: representa o colaborador, armazenando nome e salário base.  
+- `Produto`: representa um item consumível, com nome e preço de custo.  
+- `Adiantamento`: representa um adiantamento financeiro feito a um funcionário em uma data específica.  
+- `ConsumoInterno`: representa um registro de consumo de um produto por um funcionário, em certa data e quantidade, além de calcular o custo total e o valor para desconto.  
+- `CalculadoraSalarioService`: concentra a lógica de cálculo de valores, incluindo o total de adiantamentos, o total de consumo interno e o salário final de um funcionário em um determinado mês e ano.
 
+Assim, a lógica de negócio de cálculo fica centralizada em `CalculadoraSalarioService`, enquanto as classes de modelo focam em representar dados e comportamentos diretamente relacionados ao próprio objeto.
+
+**Outros princípios/padrões**
+
+Até o estado atual do projeto não há uso explícito de padrões como Strategy, Factory ou similares.  
+A arquitetura segue uma separação simples entre:
+
+- camada de modelo (`Funcionario`, `Produto`, `Adiantamento`, `ConsumoInterno`), e  
+- uma classe de serviço (`CalculadoraSalarioService`) utilizada pela classe `Main` para orquestrar a execução.
+
+---
 
 ## 7. Testes
 
-(Preencher depois de implementar)
+**Classes foco para testes**
 
-- Descrição das classes testadas (ex.: CalculadoraSalarioService).
-- Cenários contemplados:
-  - cálculo sem adiantamentos nem consumação;
-  - cálculo com adiantamentos;
-  - cálculo com consumação;
-  - cálculo com adiantamentos e consumação ao mesmo tempo.
-- Como executar os testes (comando ou procedimento na IDE).
+- `CalculadoraSalarioService`, por concentrar a lógica de cálculo.  
+- Opcionalmente, `ConsumoInterno`, para validar os métodos de cálculo `getValorCustoTotal` e `getValorParaDesconto`.
 
+**Cenários recomendados**
+
+1. **Cálculo sem adiantamentos nem consumação**  
+   - Listas de `Adiantamento` e `ConsumoInterno` vazias para o funcionário no mês/ano de referência.  
+   - Verificar:
+     - `calcularTotalAdiantamentos` retorna 0.  
+     - `calcularTotalConsumo` retorna 0.  
+     - `calcularSalarioFinal` retorna exatamente o salário base do funcionário.
+
+2. **Cálculo com adiantamentos**  
+   - Adicionar um ou mais `Adiantamento` para o funcionário no mesmo mês/ano de referência.  
+   - Verificar:
+     - `calcularTotalAdiantamentos` soma corretamente os valores daquele mês/ano.  
+     - `calcularTotalConsumo` retorna 0.  
+     - `calcularSalarioFinal` é igual ao salário base menos o total de adiantamentos.
+
+3. **Cálculo com consumação**  
+   - Adicionar registros de `ConsumoInterno` para o funcionário, com produtos e quantidades diferentes, no mesmo mês/ano.  
+   - Verificar:
+     - `getValorCustoTotal` multiplica corretamente preço de custo pelo número de unidades.  
+     - `getValorParaDesconto` aplica corretamente 3% sobre o custo total.  
+     - `calcularTotalConsumo` soma corretamente o `getValorParaDesconto` de todos os consumos daquele mês/ano.  
+     - `calcularSalarioFinal` é igual ao salário base menos o total de consumo.
+
+4. **Cálculo com adiantamentos e consumação ao mesmo tempo**  
+   - Combinar adiantamentos e consumos no mesmo período.  
+   - Verificar:
+     - `calcularTotalAdiantamentos` retorna a soma correta dos adiantamentos.  
+     - `calcularTotalConsumo` retorna a soma correta dos valores de consumo.  
+     - `calcularSalarioFinal` é igual a:  
+       `salário base − totalAdiantamentos − totalConsumo`.
+
+**Execução dos testes**
+
+A forma exata de execução dos testes (por exemplo, via JUnit na IDE, Maven/Gradle ou outro mecanismo) deve seguir o ambiente configurado no projeto.  
+Caso os testes sejam implementados em uma classe como `CalculadoraSalarioServiceTest`, eles podem ser executados diretamente pela IDE (Run Tests) ou por comandos específicos de build, se houver (por exemplo, `mvn test` em projetos Maven).
+
+---
 
 ## 8. Instruções de Execução
 
-(Adaptar conforme seu projeto)
+Abaixo está um fluxo genérico baseado em compilação via linha de comando, com a estrutura de pacotes utilizada no projeto.
 
-1. Clonar o repositório:
+1. Certificar-se de que a estrutura de diretórios segue os pacotes do código, por exemplo:
+
+   - `src/br/com/santebeach/salario/model/Funcionario.java`  
+   - `src/br/com/santebeach/salario/model/Produto.java`  
+   - `src/br/com/santebeach/salario/model/Adiantamento.java`  
+   - `src/br/com/santebeach/salario/model/ConsumoInterno.java`  
+   - `src/br/com/santebeach/salario/service/CalculadoraSalarioService.java`  
+   - `src/br/com/santebeach/salario/Main.java`
+
+2. Compilar o projeto a partir da pasta raiz, gerando os arquivos `.class` em um diretório de saída (por exemplo, `bin`):
+
    ```bash
-   git clone https://github.com/SEU_USUARIO/beach-tennis-salary-backend.git
+   javac -d bin src/br/com/santebeach/salario/**/*.java
    ```
-2. Abrir o projeto na IDE de preferência.
-3. Compilar o projeto.
-4. Executar:
-   - a classe `Main` (se existir uma interface simples em console), ou
-   - os testes unitários da classe `CalculadoraSalarioServiceTest`.
 
-(Adicionar detalhes se usar Maven/Gradle, por exemplo `mvn test`.)
+3. Executar a aplicação principal, chamando a classe `Main`:
+
+   ```bash
+   java -cp bin br.com.santebeach.salario.Main
+   ```
+
+   A execução imprime no console o resumo de pagamento dos funcionários para o mês e ano definidos na classe `Main`.
+
+Se o projeto estiver configurado com ferramentas adicionais (como Maven ou Gradle), os comandos específicos de build e execução devem ser descritos conforme essa configuração.
+
+---
 
 ## 9. Trabalhos futuros
 
-(Preencher com ideias de evolução)
+Algumas possíveis evoluções para o sistema:
 
-- Incluir controle de faltas e diárias por dia, com valores diferentes para dias de semana e fim de semana.
-- Registrar ponto diário (entrada/saída) para cada funcionário.
-- Adicionar uma interface web ou mobile para uso direto pelas gestoras.
-- Gerar relatórios mais detalhados para os funcionários (histórico de meses, gráficos, etc.).
+- Incluir regras de cálculo que considerem faltas, diárias e valores diferenciados para dias de semana e fins de semana.  
+- Implementar registro de ponto diário (entrada e saída) para cada funcionário, permitindo cálculos de horas trabalhadas e adicionais.  
+- Adicionar uma interface gráfica (web, desktop ou mobile) para cadastro de funcionários, produtos, adiantamentos e consumos, facilitando o uso pelas gestoras sem necessidade de editar código.  
+- Implementar persistência em banco de dados ou arquivos, para armazenar o histórico de lançamentos ao longo dos meses.  
+- Gerar relatórios mais detalhados para os funcionários e para as gestoras, incluindo histórico de meses, totais de adiantamentos, totais consumidos e gráficos de evolução do salário líquido.

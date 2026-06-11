@@ -1,7 +1,11 @@
-package br.com.santebeach.salario;
+package br.com.santebeach.salario.service;
 
 import java.time.Month;
 import java.util.List;
+
+import br.com.santebeach.salario.model.Adiantamento;
+import br.com.santebeach.salario.model.ConsumoInterno;
+import br.com.santebeach.salario.model.Funcionario;
 
 public class CalculadoraSalarioService {
 
