@@ -6,10 +6,16 @@ public class Funcionario {
 
     private String nome;
     private double salarioBase;
+    private int diasASeremTrabalhados;
 
     public Funcionario(String nome, double salarioBase) {
         this.nome = nome;
         this.salarioBase = salarioBase;
+        this.diasASeremTrabalhados = 28;
+    }
+
+    public int getDiasASeremTrabalhados() {
+        return diasASeremTrabalhados;
     }
 
     public String getNome() {
@@ -22,5 +28,9 @@ public class Funcionario {
 
     public void setSalarioBase(double salarioBase) {
         this.salarioBase = salarioBase;
+    }
+
+    public void setDiasASeremTrabalhados(int Dias) {
+        this.diasASeremTrabalhados = Dias;
     }
 }

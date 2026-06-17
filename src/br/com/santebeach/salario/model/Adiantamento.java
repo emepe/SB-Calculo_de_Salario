@@ -35,7 +35,30 @@ public class Adiantamento implements RegraDeDesconto {
         return valor;
     }
 
+    @Override
     public String getCategoria() {
         return categoria;
     }
+
+    @Override
+    public double getPrecoVenda() {
+        return valor;
+    }
+
+    @Override
+    public double getPrecoCusto() {
+        return valor;
+    }
+
+    @Override
+    public boolean isCobrado() {
+        return false;
+    }
+
+    @Override
+    public int getQuantidade() {
+        return 1;
+    }
+
+
 }

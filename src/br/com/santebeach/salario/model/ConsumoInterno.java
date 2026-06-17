@@ -32,20 +32,33 @@ public class ConsumoInterno implements RegraDeDesconto {
         return data;
     }
 
+    @Override
+    public double getPrecoCusto() {
+        return produto.getPrecoCusto();
+    }
+
+    @Override
+    public double getPrecoVenda() {
+        return produto.getPrecoVenda();
+    }
+
+    @Override
+    public boolean isCobrado() {
+        return produto.isCobrado();
+    }
+
+    @Override
     public int getQuantidade() {
         return quantidade;
     }
 
-    public double getValorCustoTotal() {
-        return produto.getPrecoCusto() * quantidade;
+    @Override
+    public String getCategoria() {
+        return categoria;
     }
 
     @Override
     public double getValorParaDesconto() {
-        return getValorCustoTotal() * 1.03;
-    }
-
-    public String getCategoria() {
-        return categoria;
+        return getPrecoCusto();
     }
 }

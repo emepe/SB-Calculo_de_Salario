@@ -16,8 +16,11 @@ public class Main {
 
     public static void main(String[] args) {
 
-        Funcionario func1 = new Funcionario("Funcionário 1", 2500.0);
-        Funcionario func2 = new Funcionario("Funcionário 2", 2300.0);
+        Funcionario func1 = new Funcionario("Raphael", 2500.0);
+        Funcionario func2 = new Funcionario("Cauan", 3000.0);
+
+        func1.setDiasASeremTrabalhados(28);
+        func2.setDiasASeremTrabalhados(29);
 
         Produto espeto = new Produto("Espeto", 6.20, 12.00, false);
         Produto refrigerante = new Produto("Refrigerante", 3.50, 6.00, false);
@@ -46,51 +49,68 @@ public class Main {
         List<RegraDeDesconto> descontos = new ArrayList<>();
 
         // adiantamentos
-        descontos.add(new Adiantamento(func1, LocalDate.of(2026, 6, 5), 0));
-        descontos.add(new Adiantamento(func2, LocalDate.of(2026, 6, 10), 0));
+        descontos.add(new Adiantamento(func1, LocalDate.of(2026, 6, 5), 1000));
+        descontos.add(new Adiantamento(func2, LocalDate.of(2026, 6, 10), 500));
 
         // consumos func1
-        descontos.add(new ConsumoInterno(func1, espeto, LocalDate.of(2026, 6, 3), 2));
-        descontos.add(new ConsumoInterno(func1, refrigerante, LocalDate.of(2026, 6, 3), 2));
-        descontos.add(new ConsumoInterno(func1, espeto, LocalDate.of(2026, 6, 6), 0));
+        descontos.add(new ConsumoInterno(func1, espeto, LocalDate.of(2026, 6, 3), 84));
+        descontos.add(new ConsumoInterno(func1, refrigerante, LocalDate.of(2026, 6, 3), 1));
+        descontos.add(new ConsumoInterno(func1, cerveja, LocalDate.of(2026, 6, 6), 0));
         descontos.add(new ConsumoInterno(func1, suco, LocalDate.of(2026, 6, 6), 0));
         descontos.add(new ConsumoInterno(func1, gatorade, LocalDate.of(2026, 6, 6), 0));
 
         // consumos func2
-        descontos.add(new ConsumoInterno(func2, espeto, LocalDate.of(2026, 6, 4), 2));
-        descontos.add(new ConsumoInterno(func2, suco, LocalDate.of(2026, 6, 4), 2));
-        descontos.add(new ConsumoInterno(func2, espeto, LocalDate.of(2026, 6, 7), 2));
-        descontos.add(new ConsumoInterno(func2, skolbeats, LocalDate.of(2026, 6, 7), 3));
+        descontos.add(new ConsumoInterno(func2, espeto, LocalDate.of(2026, 6, 3), 87));
+        descontos.add(new ConsumoInterno(func2, refrigerante, LocalDate.of(2026, 6, 3), 1));
+        descontos.add(new ConsumoInterno(func2, cerveja, LocalDate.of(2026, 6, 6), 0));
+        descontos.add(new ConsumoInterno(func2, suco, LocalDate.of(2026, 6, 6), 0));
+        descontos.add(new ConsumoInterno(func2, gatorade, LocalDate.of(2026, 6, 6), 0));
 
         CalculadoraSalarioService calculadora = new CalculadoraSalarioService();
 
         Month mesReferencia = Month.JUNE;
         int anoReferencia = 2026;
 
-        double totalDescontosFunc1 = calculadora.calcularTotalDescontos(func1, descontos, mesReferencia, anoReferencia);
-        double salarioFinalFunc1 = calculadora.calcularSalarioFinal(func1, descontos, mesReferencia, anoReferencia);
 
-        double totalDescontosFunc2 = calculadora.calcularTotalDescontos(func2, descontos, mesReferencia, anoReferencia);
-        double salarioFinalFunc2 = calculadora.calcularSalarioFinal(func2, descontos, mesReferencia, anoReferencia);
+        double adiantamentosFunc1 = calculadora.calcularAdiantamentos(descontos, func1, mesReferencia, anoReferencia);
+        double consumacaoFunc1 = calculadora.calcularConsumoInternoTotal(descontos, func1, mesReferencia, anoReferencia);
+        double limiteConsumacaoFunc1 = calculadora.limiteConsumoMensal(func1.getDiasASeremTrabalhados());
+        double totalDescontosFunc1 = calculadora.calcularTotalDescontos(descontos, func1, mesReferencia, anoReferencia);
+        double salarioFinalFunc1 = calculadora.calcularSalarioFinal(descontos, func1, mesReferencia, anoReferencia);
+        
+        double adiantamentosFunc2 = calculadora.calcularAdiantamentos(descontos, func2, mesReferencia, anoReferencia);
+        double consumacaoFunc2 = calculadora.calcularConsumoInternoTotal(descontos, func2, mesReferencia, anoReferencia);
+        double limiteConsumacaoFunc2 = calculadora.limiteConsumoMensal(func2.getDiasASeremTrabalhados());
+        double totalDescontosFunc2 = calculadora.calcularTotalDescontos(descontos, func2, mesReferencia, anoReferencia);
+        double salarioFinalFunc2 = calculadora.calcularSalarioFinal(descontos, func2, mesReferencia, anoReferencia);
 
-        System.out.println("==================================================");
-        System.out.println("  RESUMO DE PAGAMENTO - " + mesReferencia + " / " + anoReferencia);
-        System.out.println("==================================================");
+        System.out.println("=================================================");
+        System.out.println("       RESUMO DE PAGAMENTO - " + mesReferencia + " / " + anoReferencia);
+        System.out.println("=================================================");
 
-        imprimirResumo(func1, totalDescontosFunc1, salarioFinalFunc1);
-        System.out.println();
-        imprimirResumo(func2, totalDescontosFunc2, salarioFinalFunc2);
+        imprimirResumo(func1, adiantamentosFunc1, consumacaoFunc1, limiteConsumacaoFunc1, totalDescontosFunc1, salarioFinalFunc1);
+        System.out.println("=================================================");
+        
+        imprimirResumo(func2, adiantamentosFunc2, consumacaoFunc2, limiteConsumacaoFunc2, totalDescontosFunc2, salarioFinalFunc2);
 
-        System.out.println("==================================================");
+        System.out.println("=================================================");
     }
 
-    private static void imprimirResumo(Funcionario func,
+    private static void imprimirResumo(Funcionario func, 
+                                       double totalAdiantamentos,
+                                       double totalConsumacao,
+                                       double limiteConsumacao,
                                        double totalDescontos,
                                        double salarioFinal) {
         System.out.println("Funcionário: " + func.getNome());
-        System.out.println("----------------------------------------------");
-        System.out.println(String.format("%-30s R$ %8.2f", "Salário base:", func.getSalarioBase()));
-        System.out.println(String.format("%-30s R$ %8.2f", "Total de descontos:", totalDescontos));
-        System.out.println(String.format("%-30s R$ %8.2f", "Salário final:", salarioFinal));
+        System.out.println("-------------------------------------------------");
+        System.out.println(String.format("%-37s R$ %8.2f", "Salário base:", func.getSalarioBase()));
+        System.out.println();
+        System.out.println(String.format("%-37s R$ %8.2f", "Descontos por adiantamentos:", totalAdiantamentos));
+        System.out.println(String.format("%-37s R$ %8.2f", "Descontos por consumação:", totalConsumacao));
+        System.out.println(String.format("%-37s R$ %8.2f", "Limite de consumo para o mês:", limiteConsumacao));
+        System.out.println(String.format("%-37s R$ %8.2f", "Total de descontos:", totalDescontos));
+        System.out.println();
+        System.out.println(String.format("%-37s R$ %8.2f", "Salário final:", salarioFinal));
     }
 }

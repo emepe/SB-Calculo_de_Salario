@@ -8,9 +8,15 @@ public interface RegraDeDesconto {
 
     LocalDate getData();
 
-    double getValorParaDesconto();
-
     String getCategoria();
     
+    double getPrecoVenda();
+
+    double getPrecoCusto();
+    
     boolean isCobrado();
+
+    int getQuantidade();
+
+    double getValorParaDesconto();
 }

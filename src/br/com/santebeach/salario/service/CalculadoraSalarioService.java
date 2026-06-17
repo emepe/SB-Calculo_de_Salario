@@ -9,81 +9,79 @@ import br.com.santebeach.salario.model.RegraDeDesconto;
 
 public class CalculadoraSalarioService {
 
-    public double limiteConsumoMensal(Month mes, int ano) {
+    public double limiteConsumoMensal(int Dias) {
         double consumoDiario = 36.00;
-        List<Month> mesesCom31Dias = Arrays.asList(
-                Month.JANUARY,
-                Month.MARCH,
-                Month.MAY,
-                Month.JULY,
-                Month.AUGUST,
-                Month.OCTOBER,
-                Month.DECEMBER
-        );
-        List<Month> mesesCom30Dias = Arrays.asList(
-                Month.APRIL,
-                Month.JUNE,
-                Month.SEPTEMBER,
-                Month.NOVEMBER
-        );
-
-        if (mesesCom31Dias.contains(mes)) {
-            return consumoDiario * 31;
-        } else if (mesesCom30Dias.contains(mes)) {
-            return consumoDiario * 30;
-        } else if (mes == Month.FEBRUARY) {
-            if(ano % 4 == 0 && (ano % 100 != 0 || ano % 400 == 0)) {
-                return consumoDiario * 29; // Ano bissexto
-            }
-            return consumoDiario * 28; // Considerando ano não bissexto
-        } else {
-            throw new IllegalArgumentException("Mês inválido: " + mes);
-        }
+        return consumoDiario * Dias;
     }
 
-    private double calcularAdiantamentos(List<RegraDeDesconto> descontos,Funcionario Funcionario, Month mes, int ano) {
+    public double calcularAdiantamentos(List<RegraDeDesconto> descontos, Funcionario Funcionario, Month mes, int ano) {
         return descontos.stream()
-                .filter(d -> d.getData().getMonth() == mes && d.getData().getYear() == ano && d.getCategoria() == "Adiantamento" && d.getFuncionario().equals(Funcionario))
-                .mapToDouble(RegraDeDesconto::getValorParaDesconto)
+                .filter(d -> d.getData().getMonth() == mes &&
+                        d.getData().getYear() == ano &&
+                        d.getCategoria() == "Adiantamento" &&
+                        d.getFuncionario().equals(Funcionario))
+                .mapToDouble(RegraDeDesconto::getPrecoCusto)
                 .sum();
     }
 
-    private double calcularConsumoInternoCobraveis(List<RegraDeDesconto> descontos,Funcionario Funcionario, Month mes, int ano) {
+    public double calcularConsumoInternoCobraveis(List<RegraDeDesconto> descontos, Funcionario Funcionario, Month mes,
+            int ano) {
         return descontos.stream()
-                .filter(d -> d.getData().getMonth() == mes && d.getData().getYear() == ano && d.getCategoria() == "Consumo" && d.getFuncionario().equals(Funcionario) && d.isCobrado() == true)
-                .mapToDouble(RegraDeDesconto::getValorParaDesconto)
+                .filter(d -> d.getData().getMonth() == mes &&
+                        d.getData().getYear() == ano &&
+                        d.getCategoria() == "Consumo" &&
+                        d.getFuncionario().equals(Funcionario) &&
+                        d.isCobrado() == true)
+                .mapToDouble(d -> d.getPrecoCusto() * d.getQuantidade())
                 .sum();
     }
 
-    private double calcularConsumoInternoNotCobraveis(List<RegraDeDesconto> descontos,Funcionario Funcionario, Month mes, int ano) {
+    public double calcularConsumoInternoNotCobraveis(List<RegraDeDesconto> descontos,Funcionario Funcionario, Month mes, int ano) {
         double ValorTotal = 0.0;
-        double limiteConsumo = limiteConsumoMensal(mes, ano);
+        double limiteConsumo = limiteConsumoMensal(Funcionario.getDiasASeremTrabalhados());
         for (RegraDeDesconto desconto : descontos) {
-            if (desconto.getData().getMonth() == mes && desconto.getData().getYear() == ano && desconto.getCategoria() == "Consumo" && desconto.getFuncionario().equals(Funcionario) && desconto.isCobrado() == false) {
-                if (valorTotal < limiteConsumo) {
-                    ValorTotal += desconto.getValorParaDesconto();
+            if (desconto.getData().getMonth() == mes && 
+            desconto.getData().getYear() == ano && 
+            desconto.getCategoria().equals("Consumo") && 
+            desconto.getFuncionario().equals(Funcionario) && 
+            desconto.isCobrado() == false) {
+                for(int i = 0; i < desconto.getQuantidade(); i++) {
+                    if (ValorTotal < limiteConsumo) {
+                        ValorTotal += desconto.getPrecoVenda();
+                    }
+                    else {
+                        ValorTotal += desconto.getPrecoCusto();
+                    }
                 }
             }
         }
-        
-        return retorno;
+
+        return ValorTotal;
     }
 
-    private double calcularTotalDescontos(List<RegraDeDesconto> descontos,Funcionario Funcionario, Month mes, int ano) {
-        double adiantamentos = calcularAdiantamentos(descontos, Funcionario, mes, ano);
+    public double calcularConsumoInternoTotal(List<RegraDeDesconto> descontos,Funcionario Funcionario, Month mes, int ano) {
         double consumoInternoCobraveis = calcularConsumoInternoCobraveis(descontos, Funcionario, mes, ano);
         double consumoInternoNotCobraveis = calcularConsumoInternoNotCobraveis(descontos, Funcionario, mes, ano);
-        double limiteConsumo = limiteConsumoMensal(mes, ano);
-        return adiantamentos + consumoInternoCobraveis + consumoInternoNotCobraveis;
-    }
-    
+        double limiteConsumo = limiteConsumoMensal(Funcionario.getDiasASeremTrabalhados());
+        if (consumoInternoNotCobraveis <= limiteConsumo) {
+            return (consumoInternoCobraveis * 1.03);
+        }
 
-    public double calcularSalarioFinal(Funcionario funcionario,
-                                       List<RegraDeDesconto> descontos,
-                                       Month mes,
-                                       int ano) {
+        return (((consumoInternoNotCobraveis - limiteConsumo) +  consumoInternoCobraveis) * 1.03);
+    }
+
+    public double calcularTotalDescontos(List<RegraDeDesconto> descontos, Funcionario Funcionario, Month mes, int ano) {
+        double adiantamentos = calcularAdiantamentos(descontos, Funcionario, mes, ano);
+        double consumoInternoTotal = calcularConsumoInternoTotal(descontos, Funcionario, mes, ano);
+        return (consumoInternoTotal + adiantamentos);
+    }
+
+    public double calcularSalarioFinal(List<RegraDeDesconto> descontos,
+            Funcionario funcionario,
+            Month mes,
+            int ano) {
         double salarioBase = funcionario.getSalarioBase();
-        double totalDescontos = calcularTotalDescontos(funcionario, descontos, mes, ano);
+        double totalDescontos = calcularTotalDescontos(descontos, funcionario, mes, ano);
         return salarioBase - totalDescontos;
     }
 }

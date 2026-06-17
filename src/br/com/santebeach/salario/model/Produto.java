@@ -19,15 +19,15 @@ public class Produto {
     }
 
     public double getPrecoCusto() {
-        return precoCusto;
+        return this.precoCusto;
     }
 
     public double getPrecoVenda() {
-        return precoVenda;
+        return this.precoVenda;
     }
 
     public boolean isCobrado() {
-        return isCobrado;
+        return this.isCobrado;
     }
 
     public void setPrecoCusto(double precoCusto) {
