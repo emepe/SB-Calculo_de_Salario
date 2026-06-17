@@ -1,5 +1,7 @@
 package br.com.santebeach.salario.model;
 
+import java.util.List;
+
 public class Funcionario {
 
     private String nome;

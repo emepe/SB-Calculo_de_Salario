@@ -219,87 +219,51 @@ A arquitetura segue uma separação simples entre:
 
 ## 7. Testes
 
-**Classes foco para testes**
+Nesta etapa, foram considerados testes voltados principalmente para a classe `CalculadoraSalarioService`, por concentrar a lógica de cálculo do sistema, e para a classe `ConsumoInterno`, por conter operações de cálculo diretamente relacionadas ao desconto aplicado ao salário.[1]
 
-- `CalculadoraSalarioService`, por concentrar a lógica de cálculo.  
-- Opcionalmente, `ConsumoInterno`, para validar os métodos de cálculo `getValorCustoTotal` e `getValorParaDesconto`.
+Os cenários de teste contemplam o comportamento esperado do sistema em situações essenciais do domínio do problema:
 
-**Cenários recomendados**
+- cálculo sem adiantamentos nem consumação, em que o salário final deve permanecer igual ao salário base;
+- cálculo com adiantamentos registrados no mês e ano de referência;
+- cálculo com consumação interna registrada no período, considerando o custo total do produto e o acréscimo de 3% para desconto;
+- cálculo com adiantamentos e consumação ao mesmo tempo, verificando a subtração correta de ambos os totais no salário final.[1]
 
-1. **Cálculo sem adiantamentos nem consumação**  
-   - Listas de `Adiantamento` e `ConsumoInterno` vazias para o funcionário no mês/ano de referência.  
-   - Verificar:
-     - `calcularTotalAdiantamentos` retorna 0.  
-     - `calcularTotalConsumo` retorna 0.  
-     - `calcularSalarioFinal` retorna exatamente o salário base do funcionário.
+Os testes também devem considerar a filtragem correta por funcionário, mês e ano, garantindo que registros de outros períodos ou de outros funcionários não interfiram nos resultados do cálculo salarial.[1]
 
-2. **Cálculo com adiantamentos**  
-   - Adicionar um ou mais `Adiantamento` para o funcionário no mesmo mês/ano de referência.  
-   - Verificar:
-     - `calcularTotalAdiantamentos` soma corretamente os valores daquele mês/ano.  
-     - `calcularTotalConsumo` retorna 0.  
-     - `calcularSalarioFinal` é igual ao salário base menos o total de adiantamentos.
-
-3. **Cálculo com consumação**  
-   - Adicionar registros de `ConsumoInterno` para o funcionário, com produtos e quantidades diferentes, no mesmo mês/ano.  
-   - Verificar:
-     - `getValorCustoTotal` multiplica corretamente preço de custo pelo número de unidades.  
-     - `getValorParaDesconto` aplica corretamente 3% sobre o custo total.  
-     - `calcularTotalConsumo` soma corretamente o `getValorParaDesconto` de todos os consumos daquele mês/ano.  
-     - `calcularSalarioFinal` é igual ao salário base menos o total de consumo.
-
-4. **Cálculo com adiantamentos e consumação ao mesmo tempo**  
-   - Combinar adiantamentos e consumos no mesmo período.  
-   - Verificar:
-     - `calcularTotalAdiantamentos` retorna a soma correta dos adiantamentos.  
-     - `calcularTotalConsumo` retorna a soma correta dos valores de consumo.  
-     - `calcularSalarioFinal` é igual a:  
-       `salário base − totalAdiantamentos − totalConsumo`.
-
-**Execução dos testes**
-
-A forma exata de execução dos testes (por exemplo, via JUnit na IDE, Maven/Gradle ou outro mecanismo) deve seguir o ambiente configurado no projeto.  
-Caso os testes sejam implementados em uma classe como `CalculadoraSalarioServiceTest`, eles podem ser executados diretamente pela IDE (Run Tests) ou por comandos específicos de build, se houver (por exemplo, `mvn test` em projetos Maven).
-
----
+Quando implementados em uma classe de teste como `CalculadoraSalarioServiceTest`, esses testes podem ser executados diretamente pela IDE utilizada no projeto. Caso o projeto seja configurado futuramente com ferramentas de automação como Maven ou Gradle, os comandos de execução poderão ser documentados de forma específica no repositório.[1]
 
 ## 8. Instruções de Execução
 
-Abaixo está um fluxo genérico baseado em compilação via linha de comando, com a estrutura de pacotes utilizada no projeto.
+O projeto está estruturado em pacotes Java organizados por domínio (`model`), serviço (`service`) e aplicação (`app`), com uma classe principal responsável por demonstrar a execução do sistema em console.[1]
 
-1. Certificar-se de que a estrutura de diretórios segue os pacotes do código, por exemplo:
+Para executar a aplicação, recomenda-se o seguinte procedimento:
 
-   - `src/br/com/santebeach/salario/model/Funcionario.java`  
-   - `src/br/com/santebeach/salario/model/Produto.java`  
-   - `src/br/com/santebeach/salario/model/Adiantamento.java`  
-   - `src/br/com/santebeach/salario/model/ConsumoInterno.java`  
-   - `src/br/com/santebeach/salario/service/CalculadoraSalarioService.java`  
-   - `src/br/com/santebeach/salario/Main.java`
-
-2. Compilar o projeto a partir da pasta raiz, gerando os arquivos `.class` em um diretório de saída (por exemplo, `bin`):
-
+1. Clonar o repositório do projeto:
    ```bash
-   javac -d bin src/br/com/santebeach/salario/**/*.java
+   git clone https://github.com/emepe/SB-Calculo_de_Salario.git
    ```
 
-3. Executar a aplicação principal, chamando a classe `Main`:
+2. Abrir o projeto em uma IDE Java de preferência, como VS Code, IntelliJ IDEA ou Eclipse.
 
-   ```bash
-   java -cp bin br.com.santebeach.salario.Main
+3. Garantir que a estrutura de diretórios e pacotes esteja preservada, conforme o código-fonte disponível no repositório.[1]
+
+4. Compilar o projeto.
+
+5. Executar a classe principal localizada em:
+   ```
+   src/br/com/santebeach/salario/app/Main.java
    ```
 
-   A execução imprime no console o resumo de pagamento dos funcionários para o mês e ano definidos na classe `Main`.
+Ao executar a aplicação, o sistema imprime no console um resumo de pagamento dos funcionários cadastrados, exibindo o salário base, o total de adiantamentos, o total de consumo interno com acréscimo de 3% e o salário final calculado para o mês e ano definidos na aplicação.[1]
 
-Se o projeto estiver configurado com ferramentas adicionais (como Maven ou Gradle), os comandos específicos de build e execução devem ser descritos conforme essa configuração.
-
----
+Caso existam testes unitários implementados no projeto, eles também poderão ser executados diretamente pela IDE por meio da classe de testes correspondente.[1]
 
 ## 9. Trabalhos futuros
 
-Algumas possíveis evoluções para o sistema:
+Como evolução da solução desenvolvida, algumas melhorias podem ampliar o escopo do sistema e torná-lo mais útil para a rotina administrativa do estabelecimento:[1]
 
-- Incluir regras de cálculo que considerem faltas, diárias e valores diferenciados para dias de semana e fins de semana.  
-- Implementar registro de ponto diário (entrada e saída) para cada funcionário, permitindo cálculos de horas trabalhadas e adicionais.  
-- Adicionar uma interface gráfica (web, desktop ou mobile) para cadastro de funcionários, produtos, adiantamentos e consumos, facilitando o uso pelas gestoras sem necessidade de editar código.  
-- Implementar persistência em banco de dados ou arquivos, para armazenar o histórico de lançamentos ao longo dos meses.  
-- Gerar relatórios mais detalhados para os funcionários e para as gestoras, incluindo histórico de meses, totais de adiantamentos, totais consumidos e gráficos de evolução do salário líquido.
+- incluir controle de faltas, presença e diárias, permitindo incorporar outras regras de cálculo salarial além de adiantamentos e consumo interno;
+- registrar ponto diário de entrada e saída dos funcionários, possibilitando análises mais completas de jornada de trabalho;
+- adicionar persistência de dados em arquivos ou banco de dados, evitando que os registros fiquem restritos ao código-fonte;
+- desenvolver uma interface gráfica para facilitar o cadastro de funcionários, produtos, adiantamentos e consumos sem necessidade de editar classes manualmente;
+- gerar relatórios detalhados por período, com histórico de pagamentos, descontos e acompanhamento da evolução salarial dos funcionários.[1]
