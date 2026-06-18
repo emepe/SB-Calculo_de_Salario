@@ -283,7 +283,8 @@ A regra de cortesia adotada é: cada funcionário possui um limite mensal de R$ 
 | 3 | `deveContarComoCortesiaOConsumoInternoDoSalario` | Consumo de 2 espetos (`isCobrado = false`), totalizando R$ 24,00 em valor de venda — abaixo do limite de R$ 1.008,00 | R$ 2.500,00 (consumo contabilizado como cortesia, sem desconto) |
 | 4 | `deveDescontarAdiantamentosEConsumoJuntos` | Adiantamento de R$ 300,00 + consumo de 3 refrigerantes (`isCobrado = false`) totalizando R$ 18,00 em valor de venda — dentro do limite | R$ 2.200,00 (só o adiantamento é descontado) |
 | 5 | `deveDescontarConsumoExcedido` | Consumo de 169 refrigerantes (`isCobrado = false`) a R$ 6,00 cada (venda) = R$ 1.014,00 — excede o limite de R$ 1.008,00 em R$ 6,00; aplica-se o preço de custo (R$ 3,50) × 1,03 sobre o excedente | R$ 2.500,00 − (R$ 3,50 × 1,03) |
-| 6 | `deveDescontarAdiantamentosEConsumoExcedidoJuntos` | Adiantamento de R$ 300,00 + mesmo consumo excedido do teste 5 | R$ 2.500,00 − R$ 300,00 − (R$ 3,50 × 1,03) |
+| 6 | `deveDescontarAdiantamentosEConsumoExcedidoFalse` | Adiantamento de R$ 300,00 + mesmo consumo excedido (cortesia) do teste 5 | R$ 2.500,00 − R$ 300,00 − (R$ 3,50 × 1,03) |
+| 7 | `deveDescontarAdiantamentosEConsumoExcedidoTrue` | Adiantamento de R$ 300,00 + consumo excedido (não cortesia - cerveja) | R$ 2500,00 - R$ 300,00 - (R$ 6,29 * 1,03) |
 
 ### 7.3 Resultado da execução
 
@@ -292,16 +293,29 @@ Todos os 6 testes passaram com sucesso:
 ```text
 +-- JUnit Jupiter [OK]
 | '-- CalculadoraSalarioServiceTest [OK]
-|   +-- deveCalcularSalarioSemAdiantamentoNemConsumo() [OK]
+|   +-- deveDescontarAdiantamentosEConsumoExcedidoTrue() [OK]
 |   +-- deveDescontarAdiantamentosDoSalario() [OK]
-|   +-- deveContarComoCortesiaOConsumoInternoDoSalario() [OK]
+|   +-- deveDescontarAdiantamentosEConsumoExcedidoFalse() [OK]
 |   +-- deveDescontarAdiantamentosEConsumoJuntos() [OK]
 |   +-- deveDescontarConsumoExcedido() [OK]
-|   '-- deveDescontarAdiantamentosEConsumoExcedidoJuntos() [OK]
+|   +-- deveContarComoCortesiaOConsumoInternoDoSalario() [OK]
+|   '-- deveCalcularSalarioSemAdiantamentoNemConsumo() [OK]
++-- JUnit Vintage [OK]
+'-- JUnit Platform Suite [OK]
 
-[  6 tests found      ]
-[  6 tests successful ]
-[  0 tests failed     ]
+Test run finished after 91 ms
+[         4 containers found      ]
+[         0 containers skipped    ]
+[         4 containers started    ]
+[         0 containers aborted    ]
+[         4 containers successful ]
+[         0 containers failed     ]
+[         7 tests found           ]
+[         0 tests skipped         ]
+[         7 tests started         ]
+[         0 tests aborted         ]
+[         7 tests successful      ]
+[         0 tests failed          ]
 ```
 
 ***
@@ -345,30 +359,63 @@ javac -cp "bin;lib/junit-jupiter-api-5.10.2.jar" -d bin test/br/com/santebeach/s
 java -jar lib/junit-platform-console-standalone-1.10.2.jar --class-path bin --scan-classpath
 ```
 
-### 8.7 Saída esperada dos testes
+### 8.7 Saída esperada da aplicação principal
 
 ```text
+=================================================
+       RESUMO DE PAGAMENTO - JUNE / 2026
+=================================================
+Funcionário: Raphael
+-------------------------------------------------
+Salário base:                         R$  2500,00
+
+Descontos por adiantamentos:          R$  1000,00
+Descontos por consumação:             R$     3,61
+Limite de consumo para o mês:         R$  1008,00
+Total de descontos:                   R$  1003,61
+
+Salário final:                        R$  1496,40
+=================================================
+Funcionário: Cauan
+-------------------------------------------------
+Salário base:                         R$  3000,00
+
+Descontos por adiantamentos:          R$   500,00
+Descontos por consumação:             R$     3,61
+Limite de consumo para o mês:         R$  1044,00
+Total de descontos:                   R$   503,61
+
+Salário final:                        R$  2496,40
+=================================================
+```
+
+### 8.8 Saída esperada dos testes
+
+```text
+.
 +-- JUnit Jupiter [OK]
 | '-- CalculadoraSalarioServiceTest [OK]
-|   +-- deveCalcularSalarioSemAdiantamentoNemConsumo() [OK]
+|   +-- deveDescontarAdiantamentosEConsumoExcedidoTrue() [OK]
 |   +-- deveDescontarAdiantamentosDoSalario() [OK]
-|   +-- deveContarComoCortesiaOConsumoInternoDoSalario() [OK]
+|   +-- deveDescontarAdiantamentosEConsumoExcedidoFalse() [OK]
 |   +-- deveDescontarAdiantamentosEConsumoJuntos() [OK]
 |   +-- deveDescontarConsumoExcedido() [OK]
-|   '-- deveDescontarAdiantamentosEConsumoExcedidoJuntos() [OK]
+|   +-- deveContarComoCortesiaOConsumoInternoDoSalario() [OK]
+|   '-- deveCalcularSalarioSemAdiantamentoNemConsumo() [OK]
 +-- JUnit Vintage [OK]
 '-- JUnit Platform Suite [OK]
 
+Test run finished after 91 ms
 [         4 containers found      ]
 [         0 containers skipped    ]
 [         4 containers started    ]
 [         0 containers aborted    ]
 [         4 containers successful ]
 [         0 containers failed     ]
-[         6 tests found           ]
+[         7 tests found           ]
 [         0 tests skipped         ]
-[         6 tests started         ]
+[         7 tests started         ]
 [         0 tests aborted         ]
-[         6 tests successful      ]
+[         7 tests successful      ]
 [         0 tests failed          ]
 ```
