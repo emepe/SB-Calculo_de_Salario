@@ -24,7 +24,7 @@ public class CalculadoraSalarioServiceTest {
         List<RegraDeDesconto> descontos = new ArrayList<>();
         CalculadoraSalarioService calculadora = new CalculadoraSalarioService();
 
-        double resultado = calculadora.calcularSalarioFinal(func, descontos, Month.JUNE, 2026);
+        double resultado = calculadora.calcularSalarioFinal(descontos, func, Month.JUNE, 2026);
 
         assertEquals(2500.0, resultado);
     }
@@ -38,25 +38,24 @@ public class CalculadoraSalarioServiceTest {
         descontos.add(new Adiantamento(func, LocalDate.of(2026, 6, 5), 300.0));
         descontos.add(new Adiantamento(func, LocalDate.of(2026, 6, 10), 200.0));
 
-        double resultado = calculadora.calcularSalarioFinal(func, descontos, Month.JUNE, 2026);
+        double resultado = calculadora.calcularSalarioFinal(descontos, func, Month.JUNE, 2026);
 
         assertEquals(2000.0, resultado);
     }
 
     @Test
-    public void deveDescontarConsumoInternoDoSalario() {
-        Funcionario func = new Funcionario("Func 1", 2500.0);
+    public void deveContarComoCortesiaOConsumoInternoDoSalario() {
+        Funcionario func = new Funcionario("Func 1", 2500.00);
         List<RegraDeDesconto> descontos = new ArrayList<>();
         CalculadoraSalarioService calculadora = new CalculadoraSalarioService();
 
-        Produto espeto = new Produto("Espeto", 10.0);
+        Produto espeto = new Produto("Espeto", 6.20, 12.00, false);
 
-        // 2 unidades → custo 20.0 → desconto 20 * 1.03 = 20.6
         descontos.add(new ConsumoInterno(func, espeto, LocalDate.of(2026, 6, 3), 2));
 
-        double resultado = calculadora.calcularSalarioFinal(func, descontos, Month.JUNE, 2026);
+        double resultado = calculadora.calcularSalarioFinal(descontos, func, Month.JUNE, 2026);
 
-        assertEquals(2500.0 - 20.0 * 1.03, resultado);
+        assertEquals(2500.00, resultado);
     }
 
     @Test
@@ -67,12 +66,44 @@ public class CalculadoraSalarioServiceTest {
 
         descontos.add(new Adiantamento(func, LocalDate.of(2026, 6, 5), 300.0));
 
-        Produto refrigerante = new Produto("Refrigerante", 5.0);
-        // 3 unidades → custo 15.0 → desconto 15 * 1.03 = 15.45
+        Produto refrigerante = new Produto("Refrigerante", 3.50, 6.00, false);
+
         descontos.add(new ConsumoInterno(func, refrigerante, LocalDate.of(2026, 6, 3), 3));
 
-        double resultado = calculadora.calcularSalarioFinal(func, descontos, Month.JUNE, 2026);
+        double resultado = calculadora.calcularSalarioFinal(descontos, func, Month.JUNE, 2026);
 
-        assertEquals(2500.0 - 300.0 - 15.0 * 1.03, resultado);
+        assertEquals(2500.0 - 300.0, resultado);
+    }
+
+    @Test
+    public void deveDescontarConsumoExcedido() {
+        Funcionario func = new Funcionario("Func 1", 2500.0);
+        List<RegraDeDesconto> descontos = new ArrayList<>();
+        CalculadoraSalarioService calculadora = new CalculadoraSalarioService();
+
+        Produto refrigerante = new Produto("Refrigerante", 3.50, 6.00, false);
+
+        descontos.add(new ConsumoInterno(func, refrigerante, LocalDate.of(2026, 6, 3), 169));
+
+        double resultado = calculadora.calcularSalarioFinal(descontos, func, Month.JUNE, 2026);
+
+        assertEquals(2500.0 - (3.50 * 1.03), resultado);
+    }
+
+    @Test
+    public void deveDescontarAdiantamentosEConsumoExcedidoJuntos() {
+        Funcionario func = new Funcionario("Func 1", 2500.0);
+        List<RegraDeDesconto> descontos = new ArrayList<>();
+        CalculadoraSalarioService calculadora = new CalculadoraSalarioService();
+
+        descontos.add(new Adiantamento(func, LocalDate.of(2026, 6, 5), 300.0));
+
+        Produto refrigerante = new Produto("Refrigerante", 3.50, 6.00, false);
+
+        descontos.add(new ConsumoInterno(func, refrigerante, LocalDate.of(2026, 6, 3), 169));
+
+        double resultado = calculadora.calcularSalarioFinal(descontos, func, Month.JUNE, 2026);
+
+        assertEquals(2500.0 - 300.0 - (3.50 * 1.03), resultado);
     }
 }

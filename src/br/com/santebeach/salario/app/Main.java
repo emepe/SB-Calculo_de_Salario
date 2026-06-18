@@ -113,4 +113,4 @@ public class Main {
         System.out.println();
         System.out.println(String.format("%-37s R$ %8.2f", "Salário final:", salarioFinal));
     }
-}
+}   
